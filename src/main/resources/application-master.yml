@@ -1,0 +1,68 @@
+server:
+  port: 6855
+  servlet:
+    context-path: /qxaillmMaster
+#app信息配置
+app:
+  name: qxaillmMaster
+  information: 版本信息说明：模版基础框架项目，可直接开发，不需要再进行重新搭建
+  version: 1.0.0
+  dataSource:  #当需要将数据源作为参数时候，可使用该配置，进行参数传递
+    QXZSK: QXZSK
+    ODS: ODS
+    DW: DW-HaerBin
+    DM: DM
+  foreignURL: # 外部url接口配置
+    baiduUrl: "www.baidu.com"
+spring:
+  application:
+    name: qxaillmMaster
+  datasource:
+    druid:
+      statViewServlet:
+        enabled: true
+        allow:                                                                 #是否开启内置监控页面，默认值为 false
+        url-pattern: '/druid/*'                                                       #StatViewServlet 的映射路径，即内置监控页面的访问地址
+        reset-enable: true                                                            #是否启用重置按钮
+        login-username: admin                                                         #内置监控页面的登录页用户名 admin
+        login-password: 123456                                                         #内置监控页面的登录页密码 123456
+    dynamic:
+      druid: # druid全局配置值
+        initialSize: 6      # 初始连接数
+      ######################################################
+      primary: master    # 设置默认的数据源或者数据源组,默认值即为master
+      strict: false  #严格匹配数据源  当设置为false时，允许在运行时动态添加或删除数据源。如果设置为true，则不允许动态添加或删除数据源。
+      datasource:
+        master:
+          url: jdbc:mysql://192.168.66.166:3310/qxzsk?useUnicode=true&characterEncoding=utf-8&useSSL=false
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+          druid:
+            initial-size: 5           #初始化连接大小 仅针对当前数据源设置
+        DW-HaerBin:
+          url: jdbc:oracle:thin:@192.168.66.166:1521:ORCL
+          username: nis6
+          password: nykj2013
+          driver-class-name: oracle.jdbc.OracleDriver
+        slave_1:
+          url: jdbc:mysql://192.168.66.128:3309/qxzsk?useUnicode=true&characterEncoding=utf-8&useSSL=false
+          username: qxzsk
+          password: zsk2018
+          driver-class-name: com.mysql.jdbc.Driver
+        slave_2:
+          url: jdbc:mysql://192.168.66.166:3310/qxzsk?useUnicode=true&characterEncoding=utf-8&useSSL=false
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*/*.xml #xml sql路径
+  configuration:
+    call-setters-on-nulls: true  #  字段为null 需要返回key名称
+#type-aliases-package: com.qx.mapper   # 所有mapper所在路劲
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.qxaillm.mapper: debug  #打印sql  请指定到mapper类
+    com.baomidou.dynamic.datasource.DynamicRoutingDataSource: debug      #打印使用的数据源
